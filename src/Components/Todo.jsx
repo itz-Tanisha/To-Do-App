@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import todo_icon from '../assets/todo_icon.png'
 import ToDoItems from './ToDoItems'
 import { useState } from 'react'
@@ -6,7 +6,7 @@ import { useState } from 'react'
 const Todo = () => {
 
     // 1 : Initialise an empty to do array
-    const [todoList, setTodoList] = useState([]);
+    const [todoList, setTodoList] = useState(localStorage.getItem("todos")? JSON.parse(localStorage.getItem("todos")): []);
 
     // 2 : add task functionality using useRef Hook
     const inputRef = useRef();
@@ -30,6 +30,27 @@ const Todo = () => {
 
         inputRef.current.value = "";
     }
+
+    const deleteTodo = (id) => {
+        setTodoList(
+            (prev) => prev.filter( (item) => item.id != id)
+        )
+    }
+
+    const toggle = (id) => {
+        setTodoList( (prev) => prev.map( (item) => {
+            if(item.id == id){
+                return {...item, isComplete : !item.isComplete};
+            } else {
+                return item;
+            }
+        }));
+    }
+
+    // To store in local storage 
+    useEffect( () =>{
+        localStorage.setItem("todos", JSON.stringify(todoList))
+    }, [todoList])
 
   return (
     <div className="bg-white place-self-center w-11/12 max-w-md flex flex-col p-7 min-h-[550px] rounded-xl">
@@ -66,6 +87,8 @@ const Todo = () => {
                     text={item.text}
                     id ={item.id}
                     isComplete = {item.isComplete}
+                    deleteTodo = {deleteTodo}
+                    toggle = {toggle}
                     />
                 }
             )
