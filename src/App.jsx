@@ -1,12 +1,10 @@
-import './App.css'
+import Todo from "./Components/Todo"
 
-function App() {
-  
-
+const App = () => {
   return (
-    <>
-      
-    </>
+    <div className='bg-stone-900 grid py-4 h-screen'>
+      <Todo></Todo>
+    </div>
   )
 }
 
